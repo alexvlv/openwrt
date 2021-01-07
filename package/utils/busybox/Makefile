@@ -109,6 +109,9 @@ define Package/busybox/install
 ifneq ($(CONFIG_BUSYBOX_$(BUSYBOX_SYM)_CROND),)
 	$(INSTALL_BIN) ./files/cron $(1)/etc/init.d/cron
 endif
+ifneq ($(CONFIG_BUSYBOX_$(BUSYBOX_SYM)_TELNETD),)
+	$(INSTALL_BIN) ./files/telnet $(1)/etc/init.d/telnet
+endif
 ifneq ($(CONFIG_BUSYBOX_$(BUSYBOX_SYM)_NTPD),)
 	$(INSTALL_BIN) ./files/sysntpd $(1)/etc/init.d/sysntpd
 	$(INSTALL_BIN) ./files/ntpd-hotplug $(1)/usr/sbin/ntpd-hotplug
