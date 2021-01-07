@@ -45,7 +45,8 @@ HOST_CONFIGURE_ARGS = \
 	--without-included-gettext \
 	--enable-threads \
 	--with-expat \
-	--without-python \
+	--with-python \
+	--without-auto-load-safe-path \
 	--disable-binutils \
 	--disable-ld \
 	--disable-gas \
@@ -56,6 +57,7 @@ define Host/Install
 	$(INSTALL_BIN) $(HOST_BUILD_DIR)/gdb/gdb $(TOOLCHAIN_DIR)/bin/$(TARGET_CROSS)gdb
 	ln -fs $(TARGET_CROSS)gdb $(TOOLCHAIN_DIR)/bin/$(GNU_TARGET_NAME)-gdb
 	strip $(TOOLCHAIN_DIR)/bin/$(TARGET_CROSS)gdb
+	$(MAKE) -C $(HOST_BUILD_DIR)/gdb/data-directory install
 endef
 
 define Host/Clean
@@ -63,6 +65,7 @@ define Host/Clean
 		$(HOST_BUILD_DIR) \
 		$(TOOLCHAIN_DIR)/bin/$(TARGET_CROSS)gdb \
 		$(TOOLCHAIN_DIR)/bin/$(GNU_TARGET_NAME)-gdb
+	$(MAKE) -C $(HOST_BUILD_DIR)/gdb/data-directory uninstall
 endef
 
 $(eval $(call HostBuild))
