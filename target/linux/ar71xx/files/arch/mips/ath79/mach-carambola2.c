@@ -25,6 +25,7 @@
 #define CARAMBOLA2_GPIO_LED_ETH1		13
 
 #define CARAMBOLA2_GPIO_BTN_JUMPSTART		11
+#define CARAMBOLA2_GPIO_BTN_SOFTRESET		21
 
 #define CARAMBOLA2_KEYS_POLL_INTERVAL		20	/* msecs */
 #define CARAMBOLA2_KEYS_DEBOUNCE_INTERVAL	(3 * CARAMBOLA2_KEYS_POLL_INTERVAL)
@@ -57,6 +58,14 @@ static struct gpio_keys_button carambola2_gpio_keys[] __initdata = {
 		.code		= KEY_WPS_BUTTON,
 		.debounce_interval = CARAMBOLA2_KEYS_DEBOUNCE_INTERVAL,
 		.gpio		= CARAMBOLA2_GPIO_BTN_JUMPSTART,
+		.active_low	= 1,
+	},
+	{
+		.desc		= "reset",
+		.type		= EV_KEY,
+		.code		= KEY_RESTART,
+		.debounce_interval = CARAMBOLA2_KEYS_DEBOUNCE_INTERVAL,
+		.gpio		= CARAMBOLA2_GPIO_BTN_SOFTRESET,
 		.active_low	= 1,
 	},
 };
