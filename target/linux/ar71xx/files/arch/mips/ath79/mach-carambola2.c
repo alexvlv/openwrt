@@ -43,11 +43,11 @@ static struct gpio_led carambola2_leds_gpio[] __initdata = {
 	}, {
 		.name		= "carambola2:orange:eth0",
 		.gpio		= CARAMBOLA2_GPIO_LED_ETH0,
-		.active_low	= 0,
+		.active_low	= 1,
 	}, {
 		.name		= "carambola2:orange:eth1",
 		.gpio		= CARAMBOLA2_GPIO_LED_ETH1,
-		.active_low	= 0,
+		.active_low	= 1,
 	}
 };
 
