@@ -10,11 +10,14 @@
  #endif /* _ATH79_SPI_PLATFORM_H */
 --- a/drivers/spi/spi-ath79.c
 +++ b/drivers/spi/spi-ath79.c
-@@ -231,6 +231,7 @@ static int ath79_spi_probe(struct platfo
+@@ -231,6 +231,10 @@
  	if (pdata) {
  		master->bus_num = pdata->bus_num;
  		master->num_chipselect = pdata->num_chipselect;
 +		master->cs_gpios = pdata->cs_gpios;
++		if(master->num_chipselect > 1) {
++			printk(KERN_INFO "SPI: bus:%d cs:%d on gpio:%d \n", master->bus_num, 1, master->cs_gpios[1]);
++		}
  	}
  
  	sp->bitbang.master = master;

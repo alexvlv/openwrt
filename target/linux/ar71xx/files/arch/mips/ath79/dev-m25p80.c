@@ -26,9 +26,15 @@ static struct spi_board_info ath79_spi_info[] = {
 	{
 		.bus_num	= 0,
 		.chip_select	= 1,
-		.max_speed_hz   = 25000000,
-		.modalias	= "m25p80",
+		.max_speed_hz   = 10000000, // Measured maximum achieved data rate - 8.3mbps (120nS per bit)
+		.mode 		= SPI_MODE_0, // SPI_MODE_0 only is supported currently - AlexVol
+		.modalias	= "spidev",
 	}
+};
+
+static int device_spi_cs_gpios[2] = {
+	-ENOENT,
+	17, /* GPIO Number */
 };
 
 static struct ath79_spi_platform_data ath79_spi_data;
@@ -36,9 +42,10 @@ static struct ath79_spi_platform_data ath79_spi_data;
 void __init ath79_register_m25p80(struct flash_platform_data *pdata)
 {
 	ath79_spi_data.bus_num = 0;
-	ath79_spi_data.num_chipselect = 1;
+	ath79_spi_data.num_chipselect = 2;
+	ath79_spi_data.cs_gpios = device_spi_cs_gpios;
 	ath79_spi_info[0].platform_data = pdata;
-	ath79_register_spi(&ath79_spi_data, ath79_spi_info, 1);
+	ath79_register_spi(&ath79_spi_data, ath79_spi_info, 2);
 }
 
 static struct flash_platform_data *multi_pdata;
