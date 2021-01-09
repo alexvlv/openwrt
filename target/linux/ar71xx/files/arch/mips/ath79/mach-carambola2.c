@@ -110,5 +110,5 @@ static void __init carambola2_setup(void)
 	ath79_register_usb();
 }
 
-MIPS_MACHINE(ATH79_MACH_CARAMBOLA2, "CARAMBOLA2", "8devices Carambola2 board",
+MIPS_MACHINE(ATH79_MACH_CARAMBOLA2, "CARAMBOLA2", "Atheros Network Module",
 		carambola2_setup);
