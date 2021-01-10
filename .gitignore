@@ -1,6 +1,8 @@
 *.o
 .DS_Store
 .*.swp
+/version
+/version.date
 /env
 /dl
 /.config
