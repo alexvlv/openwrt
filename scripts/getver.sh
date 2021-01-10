@@ -12,7 +12,7 @@ try_version() {
 }
 
 try_git() {
-	REBOOT=ee53a240ac902dc83209008a2671e7fdcf55957a
+	REBOOT=8df5312a77816e21c1e953d168377fa69eecdf52 # OpenWrt v18.06.9 tag 
 	git rev-parse --git-dir >/dev/null 2>&1 || return 1
 
 	[ -n "$GET_REV" ] || GET_REV="HEAD"
