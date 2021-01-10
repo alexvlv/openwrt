@@ -1,0 +1,29 @@
+#!/bin/sh
+
+IPS=" $1 $SERVERIP 192.168.9.1 192.168.99:1 "
+
+if [ -z $NFS_DIR ]; then
+    NFS_DIR="openwrt"
+fi
+
+MNT_DIR=/mnt/nfs
+
+mkdir -p $MNT_DIR
+
+if mount | grep $MNT_DIR >/dev/null 2>&1; then
+	echo "NFS already mounted:"
+	mount | grep $MNT_DIR |  while read remote on dir rest; do echo $remote on $dir; done
+	exit 0
+fi
+
+for IP in $IPS; do
+	echo "Try mount on IP:" $IP
+	mount -t nfs -o nolock $IP:/home/nfs/$NFS_DIR $MNT_DIR
+	RES=$?
+	if [ $RES -eq 0 ]; then
+		echo "NFS dir [$NFS_DIR] on server $IP mounted on $MNT_DIR"
+		rdate $IP 2>/dev/null
+		return 0
+	fi
+done
+return 1

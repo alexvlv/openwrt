@@ -1,0 +1,24 @@
+#!/bin/sh
+
+if [ -z $1 ]; then
+    cat /sys/kernel/debug/gpio
+    exit
+fi
+
+PIN=$1
+
+if [ ! -h /sys/class/gpio/gpio${PIN} ]; then
+    echo $PIN > /sys/class/gpio/export
+fi
+
+
+if [ -z $2 ]; then
+    echo in > /sys/class/gpio/gpio${PIN}/direction
+else
+    if [ $(cat /sys/class/gpio/gpio${PIN}/direction) != "out" ]; then
+        echo out  > /sys/class/gpio/gpio${PIN}/direction
+    fi
+    echo $2 > /sys/class/gpio/gpio${PIN}/value
+fi
+#echo -n "Pin [$1/${PIN}] - state:"; cat /sys/class/gpio/gpio${PIN}/value
+cat /sys/kernel/debug/gpio | grep "gpio-$PIN\b"

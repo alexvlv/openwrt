@@ -1,0 +1,16 @@
+#!/bin/sh
+
+echo -n "Current LAN IP:"; uci get network.lan.ipaddr
+if ! [ -z $1  ]; then  
+	uci set network.lan.ipaddr=$1
+	uci commit
+	echo -n "New LAN IP:"; uci get network.lan.ipaddr
+	read -p "Apply network settings now?(y or n)" -n1 -r ANSW; echo
+	case $ANSW in
+		[yY])
+		 /etc/init.d/network restart
+		;;
+	*)
+		;;
+	esac
+fi
