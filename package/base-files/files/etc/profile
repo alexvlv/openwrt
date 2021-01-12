@@ -13,6 +13,9 @@ export PATH="%PATH%"
 export HOME=$(grep -e "^${USER:-root}:" /etc/passwd | cut -d ":" -f 6)
 export HOME=${HOME:-/root}
 export PS1='\u@\h:\w\$ '
+export SERVERIP='192.168.9.1'
+#[ -n $DEVICE_PRODUCT ] &&  export NFS_DIR=$(echo -n $DEVICE_PRODUCT | awk '{print tolower($0)}')
+export NFS_DIR='%p'
 
 case "$TERM" in
 	xterm*|rxvt*)
@@ -49,7 +52,7 @@ in order to prevent unauthorized SSH logins.
 EOF
 fi
 
-service() {
+[ -x /usr/sbin/service ] || service() {
 	[ -f "/etc/init.d/$1" ] || {
 		echo "service "'"'"$1"'"'" not found, the following services are available:"
 		ls "/etc/init.d"
