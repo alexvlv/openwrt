@@ -15,6 +15,10 @@ ar71xx_setup_interfaces()
 		ucidef_add_switch "switch0" \
 			"0@eth0" "4:lan" "5:wan"
 		;;
+	ath-net-mod)
+		ucidef_set_interface_lan "eth1"
+		ucidef_set_interface_raw "wan" "eth0" "static"
+		;;
 	airrouter|\
 	ap121|\
 	ap121-mini|\

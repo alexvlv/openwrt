@@ -1,0 +1,16 @@
+#!/bin/sh
+# $Id$
+
+[ "$(uci -q get network.lan.ipaddr)" = "192.168.99.254" ] && exit 0
+
+logger -t network "Maintenance network interface creating"
+
+uci set network.maintenance='interface'
+uci set network.maintenance.ifname='@lan'
+uci set network.maintenance.proto='static'
+uci set network.maintenance.ipaddr='192.168.99.254'
+uci set network.maintenance.netmask='255.255.255.0'
+
+uci commit network
+
+exit 0
