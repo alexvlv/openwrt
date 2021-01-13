@@ -9,6 +9,7 @@
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 include $(INCLUDE_DIR)/version.mk
+include $(INCLUDE_DIR)/env-version.mk
 include $(INCLUDE_DIR)/feeds.mk
 
 PKG_NAME:=base-files
@@ -149,6 +150,12 @@ define Package/base-files/install
 	$(VERSION_SED_SCRIPT) \
 		$(1)/etc/openwrt_release \
 		$(1)/etc/device_info \
+		$(1)/usr/lib/os-release
+
+	$(ENV_SED_SCRIPT) \
+		$(1)/etc/banner \
+		$(1)/etc/openwrt_release \
+		$(1)/etc/profile \
 		$(1)/usr/lib/os-release
 
 	mkdir -p $(1)/CONTROL
