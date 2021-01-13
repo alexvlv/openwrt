@@ -25,8 +25,11 @@ PKG_CONFIG_DEPENDS += \
 
 sanitize = $(call tolower,$(subst _,-,$(subst $(space),-,$(1))))
 
+SOURCE_BRANCH:=$(shell $(TOPDIR)/scripts/getgitbranch.sh)
+
 VERSION_NUMBER:=$(call qstrip,$(CONFIG_VERSION_NUMBER))
-VERSION_NUMBER:=$(if $(VERSION_NUMBER),$(VERSION_NUMBER),18.06.9-mod)
+VERSION_NUMBER:=$(if $(VERSION_NUMBER),$(VERSION_NUMBER),$(SOURCE_BRANCH))
+VERSION_NUMBER:=$(if $(VERSION_NUMBER),$(VERSION_NUMBER),18.06.9m)
 
 VERSION_CODE:=$(call qstrip,$(CONFIG_VERSION_CODE))
 VERSION_CODE:=$(if $(VERSION_CODE),$(VERSION_CODE),$(REVISION))
@@ -89,6 +92,11 @@ $(subst &,\&,$(subst $(comma),\$(comma),$(subst ','\'',$(subst \,\\,$(1)))))
 endef
 #'
 
+#SOURCE_DATE:=$(shell TZ=`cat /etc/timezone 2>/dev/null` date -d @$(SOURCE_DATE_EPOCH) +"%d/%m/%Y %H:%M %Z " 2>/dev/null)
+SOURCE_DATE:=$(shell $(TOPDIR)/scripts/getgitdate.sh)
+SOURCE_MOD:=$(shell $(TOPDIR)/scripts/getgitmodified.sh)
+SOURCE_ORIGIN:=$(shell $(TOPDIR)/scripts/getgitorigin.sh)
+
 VERSION_SED_SCRIPT:=$(SED) 's,%U,$(call sed_escape,$(VERSION_REPO)),g' \
 	-e 's,%V,$(call sed_escape,$(VERSION_NUMBER)),g' \
 	-e 's,%v,\L$(call sed_escape,$(subst $(space),_,$(VERSION_NUMBER))),g' \
@@ -108,4 +116,9 @@ VERSION_SED_SCRIPT:=$(SED) 's,%U,$(call sed_escape,$(VERSION_REPO)),g' \
 	-e 's,%s,$(call sed_escape,$(VERSION_SUPPORT_URL)),g' \
 	-e 's,%P,$(call sed_escape,$(VERSION_PRODUCT)),g' \
 	-e 's,%p,\L$(call sed_escape,$(subst $(space),_,$(VERSION_PRODUCT))),g' \
+	-e 's,%XST,$(call sed_escape,$(SOURCE_DATE)),g' \
+	-e 's,%XSE,$(call sed_escape,$(SOURCE_DATE_EPOCH)),g' \
+	-e 's,%XSM,$(call sed_escape,$(SOURCE_MOD)),g' \
+	-e 's,%XSB,$(call sed_escape,$(SOURCE_BRANCH)),g' \
+	-e 's,%XSO,$(call sed_escape,$(SOURCE_ORIGIN)),g' \
 	-e 's,%h,$(call sed_escape,$(VERSION_HWREV)),g'

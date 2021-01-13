@@ -20,4 +20,4 @@ try_git() {
 }
 
 try_git || REV="unknown"
-echo -n "$REV"
+echo "$REV"
