@@ -1,3 +1,5 @@
 * -text
 
 *.sh ident
+*.mk ident
+Makefile ident
