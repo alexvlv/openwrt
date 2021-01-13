@@ -4,6 +4,7 @@
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
 #
+# $Id$
 
 ifneq ($(filter check,$(MAKECMDGOALS)),)
 CHECK:=1
@@ -12,9 +13,11 @@ endif
 
 ifneq ($(SOURCE_DATE_EPOCH),)
   ifndef DUMP
-    KBUILD_BUILD_TIMESTAMP:=$(shell perl -e 'print scalar gmtime($(SOURCE_DATE_EPOCH))')
+    KBUILD_BUILD_TIMESTAMP:=$(shell $(TOPDIR)/scripts/getgitdate.sh)
   endif
 endif
+
+KBUILD_BUILD_VERSION:=$(if $(REVISION),$(REVISION),1)
 
 ifeq ($(__target_inc),)
   ifndef CHECK
@@ -104,7 +107,7 @@ KERNEL_MAKE_FLAGS = \
 	KBUILD_BUILD_USER="$(call qstrip,$(CONFIG_KERNEL_BUILD_USER))" \
 	KBUILD_BUILD_HOST="$(call qstrip,$(CONFIG_KERNEL_BUILD_DOMAIN))" \
 	KBUILD_BUILD_TIMESTAMP="$(KBUILD_BUILD_TIMESTAMP)" \
-	KBUILD_BUILD_VERSION="0" \
+	KBUILD_BUILD_VERSION="$(KBUILD_BUILD_VERSION)" \
 	HOST_LOADLIBES="-L$(STAGING_DIR_HOST)/lib" \
 	CONFIG_SHELL="$(BASH)" \
 	$(if $(findstring c,$(OPENWRT_VERBOSE)),V=1,V='') \
