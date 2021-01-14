@@ -3,3 +3,4 @@
 *.sh ident
 *.mk ident
 Makefile ident
+scripts/* ident
