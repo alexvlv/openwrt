@@ -22,7 +22,9 @@ Commands:
 	save [message]    Save your changes to the environment, optionally using
 	                  the given commit message
 	revert            Revert your changes since last save
-	push              Git commands
+	gitk              Git commands
+	gui
+	push
 	pull
 	fetch
 	git <cmd>         Run custom git command
@@ -105,6 +107,14 @@ env_git() {
 	[ -d .git ]  || error "Environment git repository not exists"
 	git $@
 }
+
+env_gitk() {
+	[ -x "$(which git 2>/dev/null)" ] || error "Git is not installed"
+	cd "$ENVDIR" || error "Failed to switch to the environment directory"
+	[ -d .git ]  || error "Environment git repository not exists"
+	gitk $@
+}
+
 
 env_sync_data() {
 	[ \! -L "$BASEDIR/.config" -a -f "$BASEDIR/.config" ] && mv "$BASEDIR/.config" "$ENVDIR"
@@ -257,6 +267,8 @@ case "$COMMAND" in
 	diff) env_diff "$@";;
 	save) env_save "$@";;
 	revert) env_revert "$@";;
+	gitk) env_gitk "$@";;
+	gui) env_git gui;;
 	push) env_git push;;
 	pull) env_git pull;;
 	fetch) env_git fetch;;
