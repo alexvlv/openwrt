@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+
+# $Id$
+
 BASEDIR="$PWD"
 ENVDIR="$PWD/env"
 export GREP_OPTIONS=
@@ -10,6 +13,7 @@ Commands:
 	help              This help text
 	list              List environments
 	clear             Delete all environment and revert to flat config/files
+	clone <url>       Clone a environment from remote repository
 	new <name>        Create a new environment
 	switch <name>     Switch to a different environment
 	delete <name>     Delete an environment
@@ -18,6 +22,10 @@ Commands:
 	save [message]    Save your changes to the environment, optionally using
 	                  the given commit message
 	revert            Revert your changes since last save
+	push              Git commands
+	pull
+	fetch
+	git <cmd>         Run custom git command
 
 Options:
 
@@ -70,6 +78,32 @@ env_init() {
 		rm -rf .git
 		error "Failed to initialize the environment directory"
 	}
+}
+
+env_clone() {
+	[ -x "$(which git 2>/dev/null)" ] || error "Git is not installed"
+	[ $# -eq "0" ] && usage
+	mkdir -p "$ENVDIR" || error "Failed to create the environment directory"
+	cd "$ENVDIR" || error "Failed to switch to the environment directory"
+	[ -d .git ]  && error "Environment git repository allready exists"
+	git clone  $@ $ENVDIR || {
+		rm -rf .git
+		error "Failed to clone the environment repository"
+	}
+	[ -f "$BASEDIR/.config" ] && mv "$BASEDIR/.config" "$BASEDIR/.config.prev"
+	rm -f "$BASEDIR/.config" "$BASEDIR/.config.old"
+	ln -s "$ENVDIR/.config" "$BASEDIR/.config"
+	ln -s "$ENVDIR/.config.old" "$BASEDIR/.config.old"
+	[ \! -L "$BASEDIR/files" -a  -d "$BASEDIR/files"  ] && mv "$BASEDIR/files" "$BASEDIR/files.prev"
+	[ -L "$BASEDIR/files" ] || ln -s "$ENVDIR/files" "$BASEDIR/files"
+}
+
+env_git() {
+	[ -x "$(which git 2>/dev/null)" ] || error "Git is not installed"
+	[ $# -eq "0" ] && usage
+	cd "$ENVDIR" || error "Failed to switch to the environment directory"
+	[ -d .git ]  || error "Environment git repository not exists"
+	git $@
 }
 
 env_sync_data() {
@@ -214,6 +248,7 @@ COMMAND="$1"; shift
 case "$COMMAND" in
 	help) usage 0;;
 	new) env_new "$@";;
+	clone) env_clone "$@";;
 	list) env_list "$@";;
 	clear) env_clear "$@";;
 	switch) env_switch "$@";;
@@ -222,5 +257,9 @@ case "$COMMAND" in
 	diff) env_diff "$@";;
 	save) env_save "$@";;
 	revert) env_revert "$@";;
+	push) env_git push;;
+	pull) env_git pull;;
+	fetch) env_git fetch;;
+	git) env_git "$@";;
 	*) usage;;
 esac
