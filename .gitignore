@@ -30,4 +30,4 @@ TAGS*~
 git-src
 .project
 .cproject
-/build.log
+/root-*
