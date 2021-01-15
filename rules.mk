@@ -5,6 +5,7 @@
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
 #
+# $Id$
 
 ifneq ($(__rules_inc),1)
 __rules_inc=1
@@ -55,6 +56,7 @@ __tr_template = $(__tr_head)$$(1)$(__tr_tail)
 
 $(eval toupper = $(call __tr_template,$(chars_lower),$(chars_upper)))
 $(eval tolower = $(call __tr_template,$(chars_upper),$(chars_lower)))
+sanitize = $(call tolower,$(subst _,-,$(subst $(space),-,$(1))))
 
 version_abbrev = $(if $(if $(CHECK),,$(DUMP)),$(1),$(shell printf '%.8s' $(1)))
 
@@ -114,7 +116,10 @@ endef
 
 DL_DIR:=$(if $(call qstrip,$(CONFIG_DOWNLOAD_FOLDER)),$(call qstrip,$(CONFIG_DOWNLOAD_FOLDER)),$(TOPDIR)/dl)
 OUTPUT_DIR:=$(if $(call qstrip,$(CONFIG_BINARY_FOLDER)),$(call qstrip,$(CONFIG_BINARY_FOLDER)),$(TOPDIR)/bin)
-BIN_DIR:=$(OUTPUT_DIR)/targets/$(BOARD)/$(SUBTARGET)
+OUTPUT_TARGET:=$(call qstrip,$(CONFIG_VERSION_PRODUCT))
+OUTPUT_TARGET:=$(call sanitize,$(OUTPUT_TARGET))
+OUTPUT_TARGET:=$(if $(OUTPUT_TARGET),$(OUTPUT_TARGET),$(BOARD))
+BIN_DIR:=$(OUTPUT_DIR)/$(OUTPUT_TARGET)
 INCLUDE_DIR:=$(TOPDIR)/include
 SCRIPT_DIR:=$(TOPDIR)/scripts
 BUILD_DIR_BASE:=$(TOPDIR)/build_dir
