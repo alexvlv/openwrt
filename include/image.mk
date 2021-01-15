@@ -3,12 +3,17 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
-#
+# $Id$
 
 override TARGET_BUILD=
 include $(INCLUDE_DIR)/prereq.mk
 include $(INCLUDE_DIR)/kernel.mk
+ifeq ($(ENV_SED_SCRIPT),)
+include $(TOPDIR)/include/env-version.mk
+endif
+ifeq ($(VERSION_SED_SCRIPT),)
 include $(INCLUDE_DIR)/version.mk
+endif
 include $(INCLUDE_DIR)/image-commands.mk
 
 ifndef IB
@@ -37,11 +42,18 @@ KDIR=$(KERNEL_BUILD_DIR)
 KDIR_TMP=$(KDIR)/tmp
 DTS_DIR:=$(LINUX_DIR)/arch/$(LINUX_KARCH)/boot/dts
 
-IMG_PREFIX_EXTRA:=$(if $(EXTRA_IMAGE_NAME),$(call sanitize,$(EXTRA_IMAGE_NAME))-)
-IMG_PREFIX_VERNUM:=$(if $(CONFIG_VERSION_FILENAMES),$(call sanitize,$(VERSION_NUMBER))-)
-IMG_PREFIX_VERCODE:=$(if $(CONFIG_VERSION_CODE_FILENAMES),$(call sanitize,$(VERSION_CODE))-)
+IMG_PREFIX_EXTRA:=$(if $(EXTRA_IMAGE_NAME),$(call sanitize,-$(EXTRA_IMAGE_NAME)))
+IMG_PREFIX_VERNUM:=$(if $(CONFIG_VERSION_FILENAMES),$(call sanitize,-$(VERSION_NUMBER)))
+IMG_PREFIX_VERCODE:=$(if $(CONFIG_VERSION_CODE_FILENAMES),$(call sanitize,-$(VERSION_CODE)))
 
-IMG_PREFIX:=$(VERSION_DIST_SANITIZED)-$(IMG_PREFIX_VERNUM)$(IMG_PREFIX_VERCODE)$(IMG_PREFIX_EXTRA)$(BOARD)$(if $(SUBTARGET),-$(SUBTARGET))
+ifeq ($(ENV_BRANCH), $(OUTPUT_TARGET))
+  IMG_PREFIX_ENV_BRANCH :=  
+else
+  IMG_PREFIX_ENV_BRANCH := -$(call sanitize,$(ENV_BRANCH))
+endif
+IMG_PREFIX_ENV_REVISION:=$(if $(ENV_REVISION),-$(call sanitize,$(ENV_REVISION)))
+
+IMG_PREFIX:=$(OUTPUT_TARGET)$(IMG_PREFIX_ENV_BRANCH)$(IMG_PREFIX_ENV_REVISION)$(IMG_PREFIX_VERNUM)$(IMG_PREFIX_VERCODE)$(IMG_PREFIX_EXTRA)
 
 MKFS_DEVTABLE_OPT := -D $(INCLUDE_DIR)/device_table.txt
 

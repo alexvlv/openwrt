@@ -16,6 +16,10 @@ endif
 include $(TOPDIR)/include/debug.mk
 include $(TOPDIR)/include/verbose.mk
 
+ifeq ($(ENV_SED_SCRIPT),)
+include $(TOPDIR)/include/env-version.mk
+endif
+
 ifneq ($(filter check,$(MAKECMDGOALS)),)
 CHECK:=1
 DUMP:=1
@@ -115,11 +119,16 @@ $(foreach t,$(DEFAULT_SUBDIR_TARGETS) $(1),
 endef
 
 DL_DIR:=$(if $(call qstrip,$(CONFIG_DOWNLOAD_FOLDER)),$(call qstrip,$(CONFIG_DOWNLOAD_FOLDER)),$(TOPDIR)/dl)
+
 OUTPUT_DIR:=$(if $(call qstrip,$(CONFIG_BINARY_FOLDER)),$(call qstrip,$(CONFIG_BINARY_FOLDER)),$(TOPDIR)/bin)
+
 OUTPUT_TARGET:=$(call qstrip,$(CONFIG_VERSION_PRODUCT))
 OUTPUT_TARGET:=$(call sanitize,$(OUTPUT_TARGET))
 OUTPUT_TARGET:=$(if $(OUTPUT_TARGET),$(OUTPUT_TARGET),$(BOARD))
-BIN_DIR:=$(OUTPUT_DIR)/$(OUTPUT_TARGET)
+OUTPUT_ENV_REVISION:=$(if $(ENV_REVISION),/$(call sanitize,$(ENV_REVISION)))
+OUTPUT_ENV_BRANCH:=$(if $(ENV_BRANCH),/$(call sanitize,$(ENV_BRANCH)))
+BIN_DIR:=$(OUTPUT_DIR)/$(OUTPUT_TARGET)$(OUTPUT_ENV_BRANCH)$(OUTPUT_ENV_REVISION)
+
 INCLUDE_DIR:=$(TOPDIR)/include
 SCRIPT_DIR:=$(TOPDIR)/scripts
 BUILD_DIR_BASE:=$(TOPDIR)/build_dir
