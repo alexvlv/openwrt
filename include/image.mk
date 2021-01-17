@@ -9,10 +9,11 @@ override TARGET_BUILD=
 include $(INCLUDE_DIR)/prereq.mk
 include $(INCLUDE_DIR)/kernel.mk
 ifeq ($(ENV_SED_SCRIPT),)
-include $(TOPDIR)/include/env-version.mk
+  include $(INCLUDE_DIR)/env-version.mk
 endif
 ifeq ($(VERSION_SED_SCRIPT),)
-include $(INCLUDE_DIR)/version.mk
+  REVISION:=$(shell $(TOPDIR)/scripts/getver.sh)
+  include $(INCLUDE_DIR)/version.mk
 endif
 include $(INCLUDE_DIR)/image-commands.mk
 
