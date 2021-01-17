@@ -61,6 +61,7 @@ __tr_template = $(__tr_head)$$(1)$(__tr_tail)
 $(eval toupper = $(call __tr_template,$(chars_lower),$(chars_upper)))
 $(eval tolower = $(call __tr_template,$(chars_upper),$(chars_lower)))
 sanitize = $(call tolower,$(subst _,-,$(subst $(space),-,$(1))))
+sanitize_target = $(call tolower,$(subst -,,$(subst _,,$(subst $(space),,$(1)))))
 
 version_abbrev = $(if $(if $(CHECK),,$(DUMP)),$(1),$(shell printf '%.8s' $(1)))
 
@@ -123,7 +124,7 @@ DL_DIR:=$(if $(call qstrip,$(CONFIG_DOWNLOAD_FOLDER)),$(call qstrip,$(CONFIG_DOW
 OUTPUT_DIR:=$(if $(call qstrip,$(CONFIG_BINARY_FOLDER)),$(call qstrip,$(CONFIG_BINARY_FOLDER)),$(TOPDIR)/bin)
 
 OUTPUT_TARGET:=$(call qstrip,$(CONFIG_VERSION_PRODUCT))
-OUTPUT_TARGET:=$(call sanitize,$(OUTPUT_TARGET))
+OUTPUT_TARGET:=$(call sanitize_target,$(OUTPUT_TARGET))
 OUTPUT_TARGET:=$(if $(OUTPUT_TARGET),$(OUTPUT_TARGET),$(BOARD))
 OUTPUT_ENV_REVISION:=$(if $(ENV_REVISION),/$(call sanitize,$(ENV_REVISION)))
 OUTPUT_ENV_BRANCH:=$(if $(ENV_BRANCH),/$(call sanitize,$(ENV_BRANCH)))

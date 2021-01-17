@@ -14,8 +14,7 @@ export HOME=$(grep -e "^${USER:-root}:" /etc/passwd | cut -d ":" -f 6)
 export HOME=${HOME:-/root}
 export PS1='\u@\h:\w\$ '
 export SERVERIP='192.168.9.1'
-#[ -n $DEVICE_PRODUCT ] &&  export NFS_DIR=$(echo -n $DEVICE_PRODUCT | awk '{print tolower($0)}')
-export NFS_DIR='%p'
+export NFS_DIR="%XSP"
 
 case "$TERM" in
 	xterm*|rxvt*)

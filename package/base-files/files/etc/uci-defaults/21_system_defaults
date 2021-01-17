@@ -3,7 +3,7 @@
 [ -f /etc/device_info ] && . /etc/device_info
 if [ -n $DEVICE_PRODUCT ]
 then
-    uci set system.@system[-1].hostname=$(echo -n $DEVICE_PRODUCT | awk '{print tolower($0)}')
+    uci set system.@system[-1].hostname=$(echo -n $DEVICE_PRODUCT | awk '{print tolower($0)}' | tr -d '-' )
 fi
 uci set system.@system[-1].timezone='MSK'
 uci commit system

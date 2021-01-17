@@ -116,6 +116,7 @@ VERSION_SED_SCRIPT:=$(SED) 's,%U,$(call sed_escape,$(VERSION_REPO)),g' \
 	-e 's,%s,$(call sed_escape,$(VERSION_SUPPORT_URL)),g' \
 	-e 's,%P,$(call sed_escape,$(VERSION_PRODUCT)),g' \
 	-e 's,%p,\L$(call sed_escape,$(subst $(space),_,$(VERSION_PRODUCT))),g' \
+	-e 's,%XSP,\L$(call sed_escape,$(subst -,,$(VERSION_PRODUCT))),g' \
 	-e 's,%XST,$(call sed_escape,$(SOURCE_DATE)),g' \
 	-e 's,%XSE,$(call sed_escape,$(SOURCE_DATE_EPOCH)),g' \
 	-e 's,%XSM,$(call sed_escape,$(SOURCE_MOD)),g' \
