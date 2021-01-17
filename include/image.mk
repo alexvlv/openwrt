@@ -116,7 +116,8 @@ define add_jffs2_mark
 	echo -ne '\xde\xad\xc0\xde' >> $(1)
 endef
 
-PROFILE_SANITIZED := $(call sanitize,$(PROFILE))
+#PROFILE_SANITIZED := $(call sanitize,$(PROFILE))
+PROFILE_SANITIZED :=
 
 define split_args
 $(foreach data, \
@@ -334,8 +335,14 @@ define Device/Init
 
   IMAGES :=
   ARTIFACTS :=
+
+  # $(1): board name
   IMAGE_PREFIX := $(IMG_PREFIX)-$(1)
-  IMAGE_NAME = $$(IMAGE_PREFIX)-$$(1)-$$(2)
+
+  # $(1): filesystem type
+  # $(2): imagetype (sysupgrade/factory)
+  IMAGE_NAME = $$(IMAGE_PREFIX)-$$(2)
+  #IMAGE_NAME = $$(IMAGE_PREFIX)-$$(1)-$$(2)
   KERNEL_PREFIX = $$(IMAGE_PREFIX)
   KERNEL_SUFFIX := -kernel.bin
   KERNEL_INITRAMFS_SUFFIX = $$(KERNEL_SUFFIX)
@@ -483,6 +490,9 @@ define Device/Build/kernel
   endif
 endef
 
+# $(1): filesystem type
+# $(2): imagetype (sysupgrade/factory)
+# $(3): board name
 define Device/Build/image
   GZ_SUFFIX := $(if $(filter %dtb %gz,$(2)),,$(if $(and $(findstring ext4,$(1)),$(CONFIG_TARGET_IMAGES_GZIP)),.gz))
   $$(_TARGET): $(BIN_DIR)/$(call IMAGE_NAME,$(1),$(2))$$(GZ_SUFFIX)
@@ -508,6 +518,8 @@ define Device/Build/image
 
   $(BIN_DIR)/$(call IMAGE_NAME,$(1),$(2)): $(KDIR)/tmp/$(call IMAGE_NAME,$(1),$(2))
 	cp $$^ $$@
+	mv $$@ $(BIN_DIR)/$(IMG_PREFIX)-$(2)
+	ln -s $(IMG_PREFIX)-$(2) $(BIN_DIR)/firmware.bin
 
 endef
 
@@ -524,6 +536,7 @@ define Device/Build/artifact
 
 endef
 
+# $(1)      : board name.
 define Device/Build
   $(if $(CONFIG_TARGET_ROOTFS_INITRAMFS),$(call Device/Build/initramfs,$(1)))
   $(call Device/Build/kernel,$(1))
