@@ -518,6 +518,7 @@ define Device/Build/image
 
   $(BIN_DIR)/$(call IMAGE_NAME,$(1),$(2)): $(KDIR)/tmp/$(call IMAGE_NAME,$(1),$(2))
 	cp $$^ $$@
+	rm -f $(BIN_DIR)/firmware.bin
 	mv $$@ $(BIN_DIR)/$(IMG_PREFIX)-$(2)
 	ln -s $(IMG_PREFIX)-$(2) $(BIN_DIR)/firmware.bin
 
