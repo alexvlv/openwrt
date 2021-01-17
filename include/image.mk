@@ -525,6 +525,7 @@ define Device/Build/image
 	mv $$@ $(BIN_DIR)/$(IMG_PREFIX)-$(2)
 	ln -s $(IMG_PREFIX)-$(2) $(BIN_DIR)/firmware.bin
 	@echo "$(IMG_PREFIX)-$(2)" > $(BIN_DIR)/firmware.txt
+	[ -s $(TARGET_DIR)/etc/banner ] && cp -f $(TARGET_DIR)/etc/banner $(BIN_DIR)
   ifneq ($(ENV_POST_SCRIPT),)
 	@echo "Execute postbuild script [$(ENV_POST_SCRIPT)]"
 	@[ -x $(ENV_POST_SCRIPT) ] && $(ENV_POST_SCRIPT) "$(BIN_DIR)/$(IMG_PREFIX)-$(2)"
