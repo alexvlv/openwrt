@@ -160,6 +160,9 @@ kernel_oldconfig: prepare_kernel_conf
 kernel_menuconfig: prepare_kernel_conf
 	$(_SINGLE)$(NO_TRACE_MAKE) -C target/linux menuconfig
 
+kernel_xconfig: prepare_kernel_conf
+	$(_SINGLE)$(NO_TRACE_MAKE) -C target/linux xconfig
+
 kernel_nconfig: prepare_kernel_conf
 	$(_SINGLE)$(NO_TRACE_MAKE) -C target/linux nconfig
 
