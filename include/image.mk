@@ -530,7 +530,7 @@ define Device/Build/image
 	ln -s $(BIN_DIR) $(TOPDIR)/firmware
   ifneq ($(ENV_POST_SCRIPT),)
 	@echo "Execute postbuild script [$(ENV_POST_SCRIPT)]"
-	@[ -x $(ENV_POST_SCRIPT) ] && $(ENV_POST_SCRIPT) "$(BIN_DIR)/$(IMG_PREFIX)-$(2)"
+	@[ -x $(ENV_POST_SCRIPT) ] && $(ENV_POST_SCRIPT) "$(BIN_DIR)/$(IMG_PREFIX)"
   endif
 
 endef
