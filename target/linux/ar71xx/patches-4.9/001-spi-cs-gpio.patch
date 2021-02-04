@@ -10,13 +10,22 @@
  #endif /* _ATH79_SPI_PLATFORM_H */
 --- a/drivers/spi/spi-ath79.c
 +++ b/drivers/spi/spi-ath79.c
+@@ -211,7 +211,7 @@
+ 	struct ath79_spi_platform_data *pdata;
+ 	struct resource	*r;
+ 	unsigned long rate;
+-	int ret;
++	int ret, i;
+ 
+ 	master = spi_alloc_master(&pdev->dev, sizeof(*sp));
+ 	if (master == NULL) {
 @@ -231,6 +231,10 @@
  	if (pdata) {
  		master->bus_num = pdata->bus_num;
  		master->num_chipselect = pdata->num_chipselect;
 +		master->cs_gpios = pdata->cs_gpios;
-+		if(master->num_chipselect > 1) {
-+			printk(KERN_INFO "SPI: bus:%d cs:%d on gpio:%d \n", master->bus_num, 1, master->cs_gpios[1]);
++		for(i=0; i<master->num_chipselect;i++) {
++			printk(KERN_INFO "SPI: bus:%d cs:%d on gpio:%d \n", master->bus_num, i, master->cs_gpios[i]);
 +		}
  	}
  
