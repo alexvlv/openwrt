@@ -1,0 +1,32 @@
+#!/bin/sh
+
+if [ -z $1 ]; then
+    echo $0: No cmdline specified!
+    exit
+fi
+
+CMD=$1
+shift
+
+if [ ! -x $CMD ]; then
+    echo $0: Can not start [$CMD]!
+    exit
+fi
+
+if [ -z $TAG ]; then
+    TAG=$(basename $CMD)
+fi
+
+echo $$ >/var/run/${TAG}-loop.pid
+
+CNT=1
+while [ true ]; do
+    logger -s -t $TAG "Starting [$CMD]..."
+    BEGIN=`date +%s`
+    $CMD "$@" 2>&1 | logger -s -t $TAG
+    END=`date +%s`
+    let ELAPS=END-BEGIN
+    logger -t $TAG -s -p ERROR "[$CMD] failed after $ELAPS sec., $CNT attempt restart"
+    let CNT++
+    sleep 1
+done

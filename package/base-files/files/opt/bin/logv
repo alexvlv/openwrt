@@ -1,0 +1,13 @@
+#!/bin/sh
+
+LINES=50
+
+for P in $@; do
+    if [ $P -gt 0 ] >/dev/null 2>&1; then
+	LINES=$P
+    fi
+done
+
+logread -l $LINES -f | while read dn mon day time year lvl msg; do echo $time $msg; done
+
+

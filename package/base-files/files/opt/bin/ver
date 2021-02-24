@@ -1,0 +1,6 @@
+#!/bin/sh
+
+cat /etc/banner
+uname -a
+
+/sbin/ifconfig br-lan 2>/dev/null | /usr/bin/head -n2
