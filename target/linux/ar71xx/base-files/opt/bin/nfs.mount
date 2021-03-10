@@ -1,6 +1,6 @@
 #!/bin/sh
 
-IPS=" $1 $SERVERIP 192.168.9.1 192.168.99:1 "
+IPS=" $1 $SERVERIP 192.168.9.1 192.168.99.1 "
 
 if [ -z $NFS_DIR ]; then
     NFS_DIR="openwrt"
